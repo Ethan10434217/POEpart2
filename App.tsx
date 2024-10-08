@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, SectionList, StyleSheet, Text, TextInput, View, SafeAreaView, ScrollView, Image} from 'react-native';
+import { Button, SectionList, StyleSheet, Text, TextInput, View, SafeAreaView, ScrollView, Image, FlatList} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState } from 'react';
 
 const Stack = createNativeStackNavigator();
+
+
 
 export default function App () {
   return(
@@ -18,7 +20,7 @@ export default function App () {
   );
 };
 
-function MenuAddingScreen({navigation,}){
+function MenuAddingScreen({navigation}){
 
   const [Starter, setStarter] = useState('');
   const [StarterName, setStarterName] = useState('');
@@ -174,6 +176,8 @@ function MenuScreen({navigation}){
           navigation.navigate('Home') 
        }}/> 
 
+
+
       </ScrollView> 
      </SafeAreaView> 
     </View> 
@@ -223,12 +227,10 @@ function HomeScreen({navigation})
 
        <Text 
           style={styles.welcomeText}>Ready to eat? Click here to see the menu.
-        </Text>    
+        </Text>  
 
-        <View style={styles.menuPicture}> 
-          <Image style={styles.ImageSize}
-          source={require('./img/grilled-salmon-fillet.jpg')} />
-       </View>
+        
+
 
       </ScrollView>
      </SafeAreaView>
@@ -251,6 +253,7 @@ const styles = StyleSheet.create({
 
   mainPicture:{
     paddingTop: 30,
+    paddingBottom: 30,
     justifyContent: 'center',
     alignItems: 'center'
 
@@ -271,8 +274,16 @@ const styles = StyleSheet.create({
   InputBoxs:{
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+    gap: 4,
+    borderWidth: 2, 
+    paddingVertical: 5,
+    
+  },
+ 
+  
+
+ 
 
  
 });
