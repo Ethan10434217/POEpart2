@@ -105,7 +105,20 @@ function MenuAddingScreen({navigation}){
 
           <Button title = "Add Menu Items" 
             onPress={() => { 
-           console.log(Starter, Main, Dessert, StarterName, StarterPrice, MainName, MainPrice, DessertName, DessertPrice) 
+            console.log(Starter, Main, Dessert, StarterName, StarterPrice, MainName, MainPrice, DessertName, DessertPrice) 
+            navigation.navigate('Menu', {
+            StarterSend : Starter,
+            StarterNameSend : StarterName,
+            StarterPriceSend: StarterPrice,
+            MainSend: Main,
+            MainNameSend: MainName,
+            MainPriceSend: MainPrice,
+            DessertSend: Dessert,
+            DessertNameSend: DessertName,
+            DessertPriceSend: DessertPrice,
+
+            })
+           
           }}/> 
 
           <Button title = 'Back to Menu Page' 
@@ -127,6 +140,8 @@ function MenuAddingScreen({navigation}){
 };
 
 function MenuScreen({navigation}){
+
+
   return(
     <View>
     <SafeAreaView>
@@ -176,6 +191,8 @@ function MenuScreen({navigation}){
           navigation.navigate('Home') 
        }}/> 
 
+       
+
 
 
       </ScrollView> 
@@ -185,7 +202,28 @@ function MenuScreen({navigation}){
 };
 
 function HomeScreen({navigation}) 
+// route should be in the function unfortunately there is a bug i cant solve yet which prevents transferring data between screens
 {
+
+  const [courses, setCourses] = useState([
+    {course: 'Starters', key: '1'},
+    {course: 'Mains', key: '2'},
+    {course: 'Desserts', key: '3'}, ]);
+
+  //  const StarterGet = route.params.StarterSend;
+  //  const StarterNameGet = route.params.StarterNameSend;
+  //  const StarterPriceGet = route.params.StarterPriceSend;
+
+  //  const MainGet = route.params.MainSend;
+  //  const MainNameGet = route.params.MainNameSend;
+  //  const MainPriceGet = route.params.MainPriceSend;
+
+  //  const DessertGet = route.params.DessertSend;
+  //  const DessertNameGet = route.params.DessertNameSend;
+  //  const DessertPriceGet = route.params.DessertPriceSend;
+
+  
+
 
   return (
     
@@ -229,8 +267,45 @@ function HomeScreen({navigation})
           style={styles.welcomeText}>Ready to eat? Click here to see the menu.
         </Text>  
 
-        
+        <Text 
+          style={styles.welcomeText}> Filter the courses here!
+        </Text>  
 
+        <View> 
+          {courses.map((item) => {
+          return (
+            <View key={item.key} >
+              <Text style={styles.item}> {item.course} </Text> 
+            </View>
+           )
+          })}
+        </View>
+
+        {/* <View> 
+          <Text style={styles.welcomeText}> 
+            Starter Name: {StarterNameGet}
+            Starter Description: {StarterGet}
+            Starter Price: {StarterPriceGet}
+          </Text>
+
+        </View> */}
+
+         {/* <View> 
+          <Text style={styles.welcomeText}> 
+            Main Name: {MainNameGet}
+            Main Description: {MainGet}
+            Main Price: {MainPriceGet}
+          </Text>
+
+        
+        </View> */}
+         {/* <View> 
+          <Text style={styles.welcomeText}> 
+            Dessert Name: {DessertNameGet}
+            Dessert Description: {DessertGet}
+            Dessert Price: {DessertPriceGet}
+          </Text>
+        </View> */}
 
       </ScrollView>
      </SafeAreaView>
@@ -277,10 +352,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     gap: 4,
     borderWidth: 2, 
-    paddingVertical: 5,
+    padding: 5
     
   },
  
+  item:{
+    marginTop: 20,
+    padding: 30,
+    fontSize: 14,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+
+
+  }
   
 
  
