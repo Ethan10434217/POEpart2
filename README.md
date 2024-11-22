@@ -20,9 +20,13 @@ When adding Menu items the date gets sent to an array
 
 Added images, textinputs
 
+Added some improvemnts to the User Interface on the Menu Adding page such as spacing in between Textinputs.
+
 Reference list
 
 CS Learner (2022). How to handle onClick event to display text after the click. [online] Stack Overflow. Available at: https://stackoverflow.com/questions/72795132/how-to-handle-onclick-event-to-display-text-after-the-click [Accessed 22 Nov. 2024].
+
+Reference listJoy, C. (2023). How CSS Spacing Works – A Guide for Web Developers. [online] freeCodeCamp.org. Available at: https://www.freecodecamp.org/news/css-spacing-guide-for-web-devs/ [Accessed 22 Nov. 2024].
 
 https://reactnative.dev/docs/view-style-props (2024). View Style Props · React Native. [online] Reactnative.dev. Available at: https://reactnative.dev/docs/view-style-props [Accessed 9 Oct. 2024].
 
