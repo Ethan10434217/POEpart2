@@ -4,17 +4,27 @@ https://youtu.be/pnQ28o2nS4o
 
 Change List: 
 
-Added navigation between pages
+Changed text on the Home page to be more accurate/ Moved items around to be more visually appealing.
 
-Added logging on button presses
+Added average course prices on the home page.
+
+Added filter page.
+
+Added navigation between pages.
+
+Added logging on button presses.
 
 Added transfer of data between pages (Work in progress still dealing with bugs)
 
+When adding Menu items the date gets sent to an array
+
 Added images, textinputs
 
-Reference List
+Reference list
 
-Reference listhttps://reactnative.dev/docs/view-style-props (2024). View Style Props · React Native. [online] Reactnative.dev. Available at: https://reactnative.dev/docs/view-style-props [Accessed 9 Oct. 2024].
+CS Learner (2022). How to handle onClick event to display text after the click. [online] Stack Overflow. Available at: https://stackoverflow.com/questions/72795132/how-to-handle-onclick-event-to-display-text-after-the-click [Accessed 22 Nov. 2024].
+
+https://reactnative.dev/docs/view-style-props (2024). View Style Props · React Native. [online] Reactnative.dev. Available at: https://reactnative.dev/docs/view-style-props [Accessed 9 Oct. 2024].
 
 React Native (2024a). Images · React Native. [online] reactnative.dev. Available at: https://reactnative.dev/docs/images [Accessed 9 Oct. 2024].
 
