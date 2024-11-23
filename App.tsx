@@ -1,38 +1,57 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, SectionList, StyleSheet, Text, TextInput, View, SafeAreaView, ScrollView, Image, FlatList} from 'react-native';
+import { Button, StyleSheet, Text, TextInput, View, SafeAreaView, ScrollView, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import React, { useState } from 'react';
+
 
 const Stack = createNativeStackNavigator();
-
-
-
+//This functions allows for navigation around the app
 export default function App () {
   return(
     <NavigationContainer>
-       <Stack.Navigator>
+       <Stack.Navigator initialRouteName='ChefMenu'>
           <Stack.Screen name="Home" component={HomeScreen}/>
           <Stack.Screen name="Menu" component={MenuScreen}/>
           <Stack.Screen name="ChefMenu" component={MenuAddingScreen}/>
+          <Stack.Screen name="Search" component={FilterScreen}/>
        </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-function MenuAddingScreen({navigation}){
+type RootStackParamList = {
+  ChefMenu: undefined;
+  MenuScreen: { inputTextStarter: string, inputTextMain: string, inputTextDessert: string};    
+}
 
-  const [Starter, setStarter] = useState('');
-  const [StarterName, setStarterName] = useState('');
-  const [StarterPrice, setStarterPrice] = useState('');
+function MenuAddingScreen({navigation, route} : any){
 
-  const [Main, setMain] = useState('');
-  const [MainName, setMainName] = useState('');
-  const [MainPrice, setMainPrice] = useState('');
+  const handleNavigate = () => {
+    // Navigate to the SecondScreen and pass the inputText as a parameter
+    navigation.navigate('Menu', { inputTextStarter: inputTextStarter, inputTextMain : inputTextMain, inputTextDessert : inputTextDessert }); 
 
-  const [Dessert,setDessert] = useState('');
-  const [DessertName, setDessertName] = useState('');
-  const [DessertPrice, setDessertPrice] = useState('');
+  }
+
+  const [inputTextStarter, setInputTextStarter] = useState('');
+
+  const [inputTextMain, setInputTextMain] = useState('');
+
+  const [inputTextDessert, setInputTextDessert] = useState('');
+
+  const [inputValue, setInputValue] = useState<string>('');
+
+  // State to hold the array of input values
+  const [startersArray, setInputArray] = useState<string[]>([]);
+
+  // This allows values to be appended into the array
+  const appendValueToArray = () => {
+    if (inputValue.trim() !== '') {
+      // Appends the value and will reset the field after
+      setInputArray((prevArray) => [...prevArray, inputValue]);
+      setInputValue(''); 
+    }
+  };
+
 
   return(
     <View> 
@@ -50,17 +69,8 @@ function MenuAddingScreen({navigation}){
 
           <TextInput style={styles.InputBoxs}
             placeholder="Enter your starter course details here."
-            onChangeText={newText => setStarter(newText)}
-          />
-
-          <TextInput style={styles.InputBoxs}
-            placeholder="Enter your starter course Name here."
-            onChangeText={newText => setStarterName(newText)}
-          />
-
-          <TextInput style={styles.InputBoxs}
-            placeholder="Enter your starter course price here."
-            onChangeText={newText => setStarterPrice(newText)}
+            onChangeText={setInputTextStarter}
+            value={inputTextStarter}
           />
 
           <View style={styles.menuPicture}> 
@@ -69,18 +79,12 @@ function MenuAddingScreen({navigation}){
          </View>      
 
           <TextInput style={styles.InputBoxs}
+            
             placeholder="Enter your main course details here"
-            onChangeText={newText => setMain(newText)}
-          />
+            onChangeText={setInputTextMain}
+            value={inputTextMain}
 
-          <TextInput style={styles.InputBoxs}
-            placeholder="Enter your main course Name here."
-            onChangeText={newText => setMainName(newText)}
-          />
-
-          <TextInput style={styles.InputBoxs}
-            placeholder="Enter your starter course Price here."
-            onChangeText={newText => setMainPrice(newText)}
+           
           />
 
           <View style={styles.menuPicture}> 
@@ -89,48 +93,30 @@ function MenuAddingScreen({navigation}){
           </View>
 
           <TextInput style={styles.InputBoxs}
+            
             placeholder="Enter your dessert course details here"
-            onChangeText={newText => setDessert(newText)}
+            onChangeText={setInputTextDessert}
+            value={inputTextDessert}
+           
           />
-
-          <TextInput style={styles.InputBoxs}
-            placeholder="Enter your dessert course Name here"
-            onChangeText={newText => setDessertName(newText)}
-          />
-
-          <TextInput style={styles.InputBoxs}
-            placeholder="Enter your dessert course price here"
-            onChangeText={newText => setDessertPrice(newText)}
-          />
-
+               
           <Button title = "Add Menu Items" 
             onPress={() => { 
-            console.log(Starter, Main, Dessert, StarterName, StarterPrice, MainName, MainPrice, DessertName, DessertPrice) 
-            navigation.navigate('Menu', {
-            StarterSend : Starter,
-            StarterNameSend : StarterName,
-            StarterPriceSend: StarterPrice,
-            MainSend: Main,
-            MainNameSend: MainName,
-            MainPriceSend: MainPrice,
-            DessertSend: Dessert,
-            DessertNameSend: DessertName,
-            DessertPriceSend: DessertPrice,
-
-            })
-           
+            console.log("Changes to starter:", inputTextStarter,"Changes to main:", inputTextMain,"Changes to dessert:", inputTextDessert) 
+           appendValueToArray
+           handleNavigate
           }}/> 
 
           <Button title = 'Back to Menu Page' 
            onPress={() => {
            console.log("Went back to Menu page")
-            navigation.navigate('Menu')
+           navigation.navigate('Menu', { inputTextStarter: inputTextStarter , inputTextMain : inputTextMain, inputTextDessert : inputTextDessert })
           }}/>
 
           <Button title = 'Back to Home Page' 
            onPress={() => {
            console.log("Went back to Home Page")
-           navigation.navigate('Home')
+           navigation.navigate('Home', { inputTextStarter: inputTextStarter , inputTextMain : inputTextMain, inputTextDessert : inputTextDessert })
           }}/>
           
         </ScrollView>
@@ -139,27 +125,34 @@ function MenuAddingScreen({navigation}){
   );
 };
 
-function MenuScreen({navigation}){
+function MenuScreen({navigation, route}: any){
 
+const { inputTextStarter } = route.params;
+const { inputTextMain } = route.params;
+const { inputTextDessert } = route.params;
 
   return(
     <View>
     <SafeAreaView>
     <ScrollView>
-    
+      
       <Text style={styles.welcomeText}> 
         Welcome to Chef Ernestos Culinary House. This is the chefs personal choices for todays menu.
         Click on the images for more information!
       </Text>
-
+ 
       <View style={styles.menuPicture}> 
         <Image style={styles.ImageSize}
         source={require('./img/grilled-salmon-fillet.jpg')} />
       </View>
 
+      
       <Text style={styles.welcomeText}>
         Entree of freshly caught river salmon over freshly boiled and then steamed Jasmin rice.
       </Text>
+      
+      <Text style={styles.welcomeText}>Your Changes: {inputTextStarter}</Text>
+
 
       <View style={styles.menuPicture}> 
         <Image style={styles.ImageSize}
@@ -169,6 +162,8 @@ function MenuScreen({navigation}){
       <Text style={styles.welcomeText}>
         Main course of Fillet Mignon aged for 30 days, with crispy roasted potatoes and our beef Au Jus
       </Text>
+             
+      <Text style={styles.welcomeText}>Your Changes: {inputTextMain}</Text>
 
       <View style={styles.menuPicture}> 
         <Image style={styles.ImageSize}
@@ -179,6 +174,8 @@ function MenuScreen({navigation}){
         Dessert course of chocolate lava cake with the finest Swiss chocolate and fresh strawberries picked by hand from the local farm.
       </Text>
 
+      <Text style={styles.welcomeText}>Your Changes: {inputTextDessert}</Text>
+
        <Button title = 'Chefs Menu Page (Hidden to customers)' 
          onPress={() => { 
           console.log("Accessed Chefs Menu Page") 
@@ -188,7 +185,7 @@ function MenuScreen({navigation}){
         <Button title = 'Back to Home Page' 
           onPress={() => { 
             console.log("Went back to Home Page") 
-          navigation.navigate('Home') 
+            navigation.navigate('Home', { inputTextStarter: inputTextStarter , inputTextMain : inputTextMain, inputTextDessert : inputTextDessert })
        }}/> 
 
        
@@ -201,29 +198,43 @@ function MenuScreen({navigation}){
   );
 };
 
-function HomeScreen({navigation}) 
-// route should be in the function unfortunately there is a bug i cant solve yet which prevents transferring data between screens
-{
 
-  const [courses, setCourses] = useState([
-    {course: 'Starters', key: '1'},
-    {course: 'Mains', key: '2'},
-    {course: 'Desserts', key: '3'}, ]);
+// function calculateStarterAverage(starterPrice: number[]): number {
+//  if (starterPrice.length === 0) {
+//    return 0;  // Return 0 if the array is empty
+//  }
 
-  //  const StarterGet = route.params.StarterSend;
-  //  const StarterNameGet = route.params.StarterNameSend;
-  //  const StarterPriceGet = route.params.StarterPriceSend;
+//  const sum = starterPrice.reduce((acc, num) => acc + num, 0);
+//  return sum / starterPrice.length;
+//}
 
-  //  const MainGet = route.params.MainSend;
-  //  const MainNameGet = route.params.MainNameSend;
-  //  const MainPriceGet = route.params.MainPriceSend;
-
-  //  const DessertGet = route.params.DessertSend;
-  //  const DessertNameGet = route.params.DessertNameSend;
-  //  const DessertPriceGet = route.params.DessertPriceSend;
-
+ //const starterAveragePrices = () => {
+ //const starterPrice: number[] = [50, 55, 70];
   
+  // Calculate average
+  //const average = calculateStarterAverage(starterPrice);
 
+//}
+
+function HomeScreen({navigation, route} : any){
+
+  const starterAverage = (50 + 55 + 70) / 3
+
+  const mainAverage = (70 + 100 + 150) / 3
+
+  const dessertAverage = (40 + 55 + 100) / 3
+
+  const handleNavigate = () => {
+    // Navigate to the SecondScreen and pass the inputText as a parameter
+    navigation.navigate('Menu', { inputTextStarter: inputTextStarter, inputTextMain : inputTextMain, inputTextDessert : inputTextDessert }); 
+
+  }
+
+ const { inputTextStarter } = route.params;
+
+ const { inputTextMain } = route.params;
+
+ const { inputTextDessert } = route.params;
 
   return (
     
@@ -242,7 +253,7 @@ function HomeScreen({navigation})
        </View>
 
        <Text style={styles.welcomeText}> Our dedicated chefs work hard to impress
-                                        our guests. Tap on the image above to see the
+                                        our guests. Scroll down to see the
                                         menu for tonight.                                     
        </Text>
 
@@ -253,67 +264,139 @@ function HomeScreen({navigation})
        </View>
 
        <Text style={styles.welcomeText}> With our chefs ready to work hard, we want
-                                        to show you tonight's menu. Tap on the 
-                                        image above to see tonight's courses.
-       </Text>      
-
-       <Button  title = "Menu"
-         onPress={() => {
-          console.log("Accessed Menu Page")
-          navigation.navigate('Menu')
-        }}/>   
+                                        to show you tonight's menu. Tap on the button 
+                                        below to preview our selected courses.
+       </Text>     
 
        <Text 
           style={styles.welcomeText}>Ready to eat? Click here to see the menu.
-        </Text>  
+        </Text>   
 
+       <Button  title = "Menu"
+         onPress={() => {
+          navigation.navigate('Menu', { inputTextStarter: inputTextStarter , inputTextMain : inputTextMain, inputTextDessert : inputTextDessert })
+          handleNavigate
+        }}/>   
+ 
         <Text 
-          style={styles.welcomeText}> Filter the courses here!
+          style={styles.welcomeText}> Have budget concerns? Our courses average prices will be listed here!
         </Text>  
+                     
+       <Text style={styles.welcomeText}>Starters Average Price: R{starterAverage.toFixed(1)} </Text>
+      
 
-        <View> 
-          {courses.map((item) => {
-          return (
-            <View key={item.key} >
-              <Text style={styles.item}> {item.course} </Text> 
-            </View>
-           )
-          })}
-        </View>
+       <Text style={styles.welcomeText}>Mains Average Price: R{mainAverage.toFixed(1)}</Text>
 
-        {/* <View> 
-          <Text style={styles.welcomeText}> 
-            Starter Name: {StarterNameGet}
-            Starter Description: {StarterGet}
-            Starter Price: {StarterPriceGet}
-          </Text>
+       <Text style={styles.welcomeText}>Desserts Average Price: R{dessertAverage.toFixed(1)}</Text>
 
-        </View> */}
 
-         {/* <View> 
-          <Text style={styles.welcomeText}> 
-            Main Name: {MainNameGet}
-            Main Description: {MainGet}
-            Main Price: {MainPriceGet}
-          </Text>
+       <Text style={styles.welcomeText}>Search through our menu with the button below.</Text>
 
-        
-        </View> */}
-         {/* <View> 
-          <Text style={styles.welcomeText}> 
-            Dessert Name: {DessertNameGet}
-            Dessert Description: {DessertGet}
-            Dessert Price: {DessertPriceGet}
-          </Text>
-        </View> */}
+       <Button  title = "Search"
+         onPress={() => {
+          console.log("Accessed Search Page") 
+          navigation.navigate('Search', { inputTextStarter: inputTextStarter , inputTextMain : inputTextMain, inputTextDessert : inputTextDessert })
+        }}/>    
 
-      </ScrollView>
+
+
+       </ScrollView>
      </SafeAreaView>
      </View>
     
-  );
+   );
+  
 }
 
+function FilterScreen({navigation, route}: any){
+
+  const handleNavigate = () => {
+    // Navigate to the SecondScreen and pass the inputText as a parameter
+    navigation.navigate('Menu', { inputTextStarter: inputTextStarter, inputTextMain : inputTextMain, inputTextDessert : inputTextDessert }); 
+
+  }
+
+ const { inputTextStarter } = route.params;
+
+ const { inputTextMain } = route.params;
+
+ const { inputTextDessert } = route.params;
+
+  
+  const [startersText, setDisplayTextStarter] = useState('');
+  
+  const handleButtonPressStarter = () => {
+    const starterOne = 'Beef Bites R50'
+
+    const starterTwo = 'Caeser Salad R55'
+
+    const starterThree = 'Grilled Salmon R70'
+
+     // Assigning the Text to a variable allowing it to be displayed when the button is pressed
+    setDisplayTextStarter(`Starter Option 1: ${starterOne}\nStarter Option 2: ${starterTwo}\nStarter Option 3: ${starterThree}`);
+  };
+
+  const [mainsText, setDisplayTextMains] = useState('');
+
+  const handleButtonPressMains = () => {
+    const mainOne = 'Chicken Wrap R70'
+
+    const mainTwo = 'Surf And Turf R100'
+
+    const mainThree = 'Grilled Steak R150'
+
+    setDisplayTextMains(`Mains Option 1: ${mainOne}\nMains Option 2: ${mainTwo}\nMains Option 3: ${mainThree}`);
+  };
+
+  const [dessertsText, setDisplayTextDesserts] = useState('');
+
+  const handleButtonPressDesserts = () => {
+    const dessertOne = 'Assorted Milkshakes R40'
+
+    const dessertTwo = 'Strawberry Ice Cream R55'
+
+    const dessertThree = 'Chocolate Lava Cake R100'
+
+    setDisplayTextDesserts(`Dessert Option 1: ${dessertOne}\nDessert Option 2: ${dessertTwo}\nDessert Option 3: ${dessertThree}`);
+  };
+
+
+ return(
+  <View>
+    <SafeAreaView>
+      <ScrollView>
+
+        <Text style={styles.welcomeText}>
+              Welcome to the search page. Here you can filter by course and see what is on the 
+              Menu and its pricing.
+        </Text>
+
+        <Button title = "Starters"
+        //Displays the text when the button is pressed
+          onPress={handleButtonPressStarter}/>
+        <Text style={styles.welcomeText}>{startersText}</Text>
+
+       <Button title = "Mains"
+          onPress={handleButtonPressMains}/>
+       <Text style={styles.welcomeText}>{mainsText}</Text>
+
+       <Button title = "Desserts"
+          onPress={handleButtonPressDesserts}/>
+       <Text style={styles.welcomeText}>{dessertsText}</Text>
+
+       <Button title = 'Back to Home Page' 
+          onPress={() => { 
+            console.log("Went back to Home Page") 
+            navigation.navigate('Home', { inputTextStarter: inputTextStarter , inputTextMain : inputTextMain, inputTextDessert : inputTextDessert })
+       }}/> 
+
+
+
+      </ScrollView>
+    </SafeAreaView>
+  </View>
+ )
+}
 
 
 const styles = StyleSheet.create({
@@ -323,14 +406,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
     textAlign: 'center',
-    paddingHorizontal:12
+    paddingHorizontal:12,
+    paddingBottom: 20,
   },
 
   mainPicture:{
     paddingTop: 30,
     paddingBottom: 30,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: 75,
 
   },
 
@@ -343,7 +428,7 @@ const styles = StyleSheet.create({
   menuPicture:{
     paddingTop: 30,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   InputBoxs:{
@@ -352,8 +437,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     gap: 4,
     borderWidth: 2, 
-    padding: 5
-    
+    padding: 5,
+    marginBottom: 5,
+    marginTop: 5,
   },
  
   item:{
@@ -366,10 +452,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
 
 
-  }
-  
+  } 
 
- 
-
- 
 });
