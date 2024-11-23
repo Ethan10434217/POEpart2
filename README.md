@@ -4,6 +4,10 @@ https://youtu.be/pnQ28o2nS4o
 
 Change List: 
 
+Fixed all errors 
+
+Removed some unnecessary textInputs on the ChefMenu page.
+
 Changed text on the Home page to be more accurate/ Moved items around to be more visually appealing.
 
 Added average course prices on the home page.
